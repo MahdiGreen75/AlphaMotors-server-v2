@@ -34,6 +34,7 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const brandLogosCollection = client.db("brandLogosDB").collection("brandLogos");
         const toyotaCollection = client.db("toyotaDB").collection("toyota");
         const fordCollection = client.db("fordDB").collection("ford");
         const bmwCollection = client.db("bmwDB").collection("bmw");
@@ -42,9 +43,10 @@ async function run() {
         const hondaCollection = client.db("hondaDB").collection("honda");
         const nissanCollection = client.db("nissanDB").collection("nissan");
         const jeepCollection = client.db("jeepDB").collection("jeep");
-
+    
+        // Get API here for all the products under different brands.
         app.get('/toyota', async(req, res)=> {
-            const cursor = toyotaCollection.find();
+            const cursor = brandLogosCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -60,6 +62,9 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
+        // CRUD functionallity API here.
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
