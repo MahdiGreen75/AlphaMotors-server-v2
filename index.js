@@ -33,12 +33,38 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+
+        const toyotaCollection = client.db("toyotaDB").collection("toyota");
+        const fordCollection = client.db("fordDB").collection("ford");
+        const bmwCollection = client.db("bmwDB").collection("bmw");
+        const mercedesBenzCollection = client.db("mercedesBenzDB").collection("mercedes-benz");
+        const teslaCollection = client.db("teslaDB").collection("tesla");
+        const hondaCollection = client.db("hondaDB").collection("honda");
+        const nissanCollection = client.db("nissanDB").collection("nissan");
+        const jeepCollection = client.db("jeepDB").collection("jeep");
+
+        app.get('/toyota', async(req, res)=> {
+            const cursor = toyotaCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.get('/ford', async(req, res)=> {
+            const cursor = fordCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.get('/bmw', async(req, res)=> {
+            const cursor = bmwCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();
     }
 }
 run().catch(console.dir);
