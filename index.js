@@ -48,11 +48,13 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
         app.get('/ford', async(req, res)=> {
             const cursor = fordCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
+        
         app.get('/bmw', async(req, res)=> {
             const cursor = bmwCollection.find();
             const result = await cursor.toArray();
