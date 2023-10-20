@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express()
@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send("Hey, I am still alive.")
+    res.send("Hey, I am still alive.How are you? what a beautiful day!")
 })
 
 // const uri = "mongodb+srv://AlphaMotorsDevTeam:<password>@cluster0.8oyrgrw.mongodb.net/?retryWrites=true&w=majority";
@@ -43,28 +43,117 @@ async function run() {
         const hondaCollection = client.db("hondaDB").collection("honda");
         const nissanCollection = client.db("nissanDB").collection("nissan");
         const jeepCollection = client.db("jeepDB").collection("jeep");
-    
+        //add to cart
+        const cartCollection = client.db("cartDB").collection("cart");
+
         // Get API here for all the products under different brands.
-        app.get('/toyota', async(req, res)=> {
-            const cursor = brandLogosCollection.find();
+        app.get('/toyota', async (req, res) => {
+            const cursor = toyotaCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/ford', async(req, res)=> {
+        app.get('/ford', async (req, res) => {
             const cursor = fordCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
-        
-        app.get('/bmw', async(req, res)=> {
+
+        app.get('/bmw', async (req, res) => {
             const cursor = bmwCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        // CRUD functionallity API here.
+        app.get('/mercedes-benz', async (req, res) => {
+            const cursor = mercedesBenzCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
+        app.get('/tesla', async (req, res) => {
+            const cursor = teslaCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/honda', async (req, res) => {
+            const cursor = hondaCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/jeep', async (req, res) => {
+            const cursor = jeepCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/nissan', async (req, res) => {
+            const cursor = nissanCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // Get Brand logos 
+        app.get('/services', async (req, res) => {
+            const cursor = brandLogosCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // CRUD functionallity API here.
+        app.post('/carts', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            //send to server.
+        })
+
+        app.patch('/updates/:id', async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    "name": user.productName,
+                    "image": user.productImg,
+                    "brand_name": user.brandName,
+                    "type": user.typeName,
+                    "price": user.productPrice,
+                    "rating": user.productRating
+                }
+            }
+            
+            let result;
+
+            if (user.brandName === "Ford") {
+                 result = await fordCollection.updateOne(filter, updateDoc);
+            } else if (user.brandName === "BMW") {
+                 result = await bmwCollection.updateOne(filter, updateDoc);
+            }
+            else if (user.brandName === "Mercedes-Benz") {
+                 result = await mercedesBenzCollection.updateOne(filter, updateDoc);
+            }
+            else if (user.brandName === "Nissan") {
+                 result = await nissanCollection.updateOne(filter, updateDoc);
+            }
+            else if (user.brandName === "Honda") {
+                 result = await hondaCollection.updateOne(filter, updateDoc);
+            }
+            else if (user.brandName === "Jeep") {
+                 result = await jeepCollection.updateOne(filter, updateDoc);
+            }
+            else if (user.brandName === "Tesla") {
+                 result = await teslaCollection.updateOne(filter, updateDoc);
+            }
+            else {
+                 result = await toyotaCollection.updateOne(filter, updateDoc);
+            }
+
+            // const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
