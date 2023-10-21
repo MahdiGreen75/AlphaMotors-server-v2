@@ -111,6 +111,22 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/getCart', async (req, res) => {
+            const cursor = cartCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post("/addProduct", async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            // Add your logic for processing the request here
+          
+            // Send a response (you should include appropriate CORS headers here)
+            res.json({ message: 'Request received successfully' });
+          });
+          
+
         app.patch('/updates/:id', async (req, res) => {
             const id = req.params.id;
             const user = req.body;
@@ -127,30 +143,30 @@ async function run() {
                 }
             }
             // = await fordCollection.updateOne(filter, updateDoc);
-            let result 
+            let result
 
             if (user.brandName === "Ford") {
-                 result = await fordCollection.updateOne(filter, updateDoc);
+                result = await fordCollection.updateOne(filter, updateDoc);
             } else if (user.brandName === "BMW") {
-                 result = await bmwCollection.updateOne(filter, updateDoc);
+                result = await bmwCollection.updateOne(filter, updateDoc);
             }
             else if (user.brandName === "Mercedes-Benz") {
-                 result = await mercedesBenzCollection.updateOne(filter, updateDoc);
+                result = await mercedesBenzCollection.updateOne(filter, updateDoc);
             }
             else if (user.brandName === "Nissan") {
-                 result = await nissanCollection.updateOne(filter, updateDoc);
+                result = await nissanCollection.updateOne(filter, updateDoc);
             }
             else if (user.brandName === "Honda") {
-                 result = await hondaCollection.updateOne(filter, updateDoc);
+                result = await hondaCollection.updateOne(filter, updateDoc);
             }
             else if (user.brandName === "Jeep") {
-                 result = await jeepCollection.updateOne(filter, updateDoc);
+                result = await jeepCollection.updateOne(filter, updateDoc);
             }
             else if (user.brandName === "Tesla") {
-                 result = await teslaCollection.updateOne(filter, updateDoc);
+                result = await teslaCollection.updateOne(filter, updateDoc);
             }
             else {
-                 result = await toyotaCollection.updateOne(filter, updateDoc);
+                result = await toyotaCollection.updateOne(filter, updateDoc);
             }
 
             res.send(result);
