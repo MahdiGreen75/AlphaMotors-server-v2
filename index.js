@@ -32,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect(); //changed
 
         const brandLogosCollection = client.db("brandLogosDB").collection("brandLogos");
         const toyotaCollection = client.db("toyotaDB").collection("toyota");
@@ -47,49 +47,49 @@ async function run() {
         const cartCollection = client.db("cartDB").collection("cart");
 
         // Get API here for all the products under different brands.
-        app.get('/toyota', async (req, res) => {
+        app.get('/Toyota', async (req, res) => {
             const cursor = toyotaCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/ford', async (req, res) => {
+        app.get('/Ford', async (req, res) => {
             const cursor = fordCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/bmw', async (req, res) => {
+        app.get('/BMW', async (req, res) => {
             const cursor = bmwCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/mercedes-benz', async (req, res) => {
+        app.get('/mercedesBenz', async (req, res) => {
             const cursor = mercedesBenzCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/tesla', async (req, res) => {
+        app.get('/Tesla', async (req, res) => {
             const cursor = teslaCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/honda', async (req, res) => {
+        app.get('/Honda', async (req, res) => {
             const cursor = hondaCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/jeep', async (req, res) => {
+        app.get('/Jeep', async (req, res) => {
             const cursor = jeepCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/nissan', async (req, res) => {
+        app.get('/Nissan', async (req, res) => {
             const cursor = nissanCollection.find();
             const result = await cursor.toArray();
             res.send(result);
@@ -105,15 +105,17 @@ async function run() {
         // CRUD functionallity API here.
         app.post('/carts', async (req, res) => {
             const user = req.body;
-            console.log(user);
+            // console.log(user);
             //send to server.
+            const result = await cartCollection.insertOne(user);
+            res.send(result);
         })
 
         app.patch('/updates/:id', async (req, res) => {
             const id = req.params.id;
             const user = req.body;
             const filter = { _id: new ObjectId(id) };
-            const options = { upsert: true };
+            // const options = { upsert: true };
             const updateDoc = {
                 $set: {
                     "name": user.productName,
@@ -124,8 +126,8 @@ async function run() {
                     "rating": user.productRating
                 }
             }
-            
-            let result;
+            // = await fordCollection.updateOne(filter, updateDoc);
+            let result 
 
             if (user.brandName === "Ford") {
                  result = await fordCollection.updateOne(filter, updateDoc);
@@ -151,12 +153,11 @@ async function run() {
                  result = await toyotaCollection.updateOne(filter, updateDoc);
             }
 
-            // const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result);
         })
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });//changed
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
